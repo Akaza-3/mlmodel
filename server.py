@@ -1,7 +1,9 @@
+import pickle
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pandas as pd
-import datetime
+from datetime import datetime
+
 import numpy as np
 from sklearn.linear_model import LinearRegression
 import random
@@ -9,6 +11,7 @@ from bson import json_util
 
 app = Flask(__name__)
 CORS(app)   
+model1 = pickle.load(open('model1_linear.pkl', 'rb'))
 
 
 @app.route('/')
@@ -36,6 +39,44 @@ def prediction():
 
     data = {"value": round((predicted_value[0]),1), "time":now_string, "a": a, "b":b, "c":c}
     return jsonify({'data' : json_util.dumps(data)})
+
+
+@app.route('/predict1/', methods=["GET"])
+def predict1():
+    
+    qideka = request.args.get('qideka')
+    f50deol = request.args.get('f50deol')
+    qideol = request.args.get('qideol')
+    f50pt = request.args.get('f50pt')
+    qipt = request.args.get('qipt')
+    f50tr = request.args.get('f50tr')
+    qitr = request.args.get('qitr')
+    current_datetime = datetime.now()
+    year = current_datetime.year
+    month = current_datetime.month
+    day = current_datetime.day
+    hour = current_datetime.hour
+    minute = current_datetime.minute
+    second = current_datetime.second
+    input_data = {
+        'QI_DE_KA': [qideka],
+        'f50_DE_OL': [f50deol],
+        'QI_DE_OL': [qideol],
+        'f50_PT': [f50pt],
+        'QI_PT': [qipt],
+        'f50_TR': [f50tr],
+        'QI_TR': [qitr],
+        'Year': [year],
+        'Month': [month],
+        'Day': [day],
+        'Hour': [hour],
+        'Minute': [minute],
+        'Second': [second]
+    }    
+    input_df = pd.DataFrame(input_data)
+    prediction = model1.predict(input_df)
+    print(prediction[0])
+    return jsonify({'prediction': prediction[0]})
 
 
 if(__name__) == '__main__':
