@@ -33,7 +33,7 @@ def prediction():
     a = round(random.uniform(1,300 ), 1)
     b = round(random.uniform(1,75 ), 1)
     c = round(random.uniform(1,100 ), 1)
-    now = datetime.datetime.now()
+    now = datetime.now()
     now_string = now.strftime('%H:%M:%S')
     predicted_value = model.predict([[a,b,c]])
 

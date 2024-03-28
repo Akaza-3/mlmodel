@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import "chart.js/auto";
 import axios from "axios";
+
+
 function Advertising() {
   const [a, setA] = useState("");
   const [b, setB] = useState("");
@@ -71,23 +73,15 @@ function Advertising() {
 
   return (
     <>
-      <div className=" w-screen h-screen">
+      <div className=" w-full h-full">
         <div className="text-white p-3">
-          <p className="text-md w-svh">
-            The following is an ML model representing the impact on sales of a
-            particular product when advertised through three different mediums:
-            TV, Newspaper and Radio. Dataset is trained and for random values of
-            the three mediums, sales is predicted and a graph is plot for the
-            same.
-          </p>
-          <br />
           <h2>TV = {a}</h2>
           <h2>Radio = {b}</h2>
           <h2>Newspaper = {c}</h2>
           <br />
           <h1>Predicted sales value: {value}</h1>
 
-          <div className="h-3/5 w-3/5">
+          <div className="sm:h-full sm:w-screen md:h-5/6 md:w-1/2">
             <Line data={data} options={options} />
           </div>
         </div>

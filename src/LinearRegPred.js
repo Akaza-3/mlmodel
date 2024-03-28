@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SliderInput from "./SliderInput";
-import { Line } from "react-chartjs-2";
 import { Chart } from "react-google-charts";
 
 function LinearRegPred() {
@@ -14,24 +13,11 @@ function LinearRegPred() {
   const [qitr, setqitr] = useState(0.5);
 
   const [selectedOption, setSelectedOption] = useState(1000);
-  const [graphData, setGraphData] = useState(["time", "value"]);
+  const [graphData, setGraphData] = useState([["time", "value"]]);
 
   const handleOptionChange = (event) => {
     setSelectedOption(parseInt(event.target.value));
   };
-
-  const [data, setData] = useState({
-    labels: [],
-    datasets: [
-      {
-        label: "Live Prediction ( Linear Regression )",
-        data: [],
-        fill: false,
-        borderColor: "rgb(0, 151, 67)",
-        tension: 0.1,
-      },
-    ],
-  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -51,32 +37,14 @@ function LinearRegPred() {
         .then((response) => {
           const responseData = response.data.prediction;
           const newLabels = Date.now();
-          setData((prevData) => ({
-            labels: [...prevData.labels, newLabels],
-            datasets: [
-              {
-                ...prevData.datasets[0],
-                data: [...prevData.datasets[0].data, responseData],
-              },
-            ],
-          }));
-          const newLabelTemp = data.labels.slice(-1 * selectedOption);
-          const newDataTemp = data.datasets[0].data.slice(-1 * selectedOption);
-
-          const newChartData = [
-            ["Time", "Value"],
-            ...newLabelTemp.map((label, index) => [label, newDataTemp[index]]),
-          ];
-
-          setGraphData({
-            newChartData,
-          });
-
-          console.log(data);
+          setGraphData((prevData) => [
+            ...prevData,
+            [newLabels, responseData],
+          ]);
         });
     }, 1000);
     return () => clearInterval(interval);
-  }, [qideka, f50deol, qideol, f50pt, qipt, f50tr, qitr, data]);
+  }, [qideka, f50deol, qideol, f50pt, qipt, f50tr, qitr]);
 
   const handleSliderChange1 = (event) => {
     setqideka(event.target.value);
@@ -100,10 +68,11 @@ function LinearRegPred() {
     setqitr(event.target.value);
   };
   return (
-    <div className="text-white p-3">
+    <div className="text-white h-screen">
       <div>
         <label htmlFor="dropdown">Max points to select:</label>
         <select
+          className="bg-black"
           id="dropdown"
           value={selectedOption}
           onChange={handleOptionChange}
@@ -116,79 +85,85 @@ function LinearRegPred() {
         </select>
       </div>
       <Chart
+        className="h-[50vh] w-full"
         chartType="LineChart"
-        width="100%"
-        height="400px"
-        data={graphData.newChartData}
-      />{" "}
-      Slider setter:
-      <div>
-        qideka
-        <SliderInput
-          max={1}
-          min={0}
-          step={0.01}
-          value={qideka}
-          onChange={handleSliderChange1}
-        />
-      </div>
-      <div>
-        f50deol
-        <SliderInput
-          min={0}
-          max={100}
-          value={f50deol}
-          onChange={handleSliderChange2}
-        />
-      </div>
-      <div>
-        qideol
-        <SliderInput
-          min={0}
-          step={0.01}
-          max={1}
-          value={qideol}
-          onChange={handleSliderChange3}
-        />
-      </div>
-      <div>
-        f50pt
-        <SliderInput
-          min={0}
-          max={100}
-          value={f50pt}
-          onChange={handleSliderChange4}
-        />
-      </div>
-      <div>
-        qipt
-        <SliderInput
-          step={0.01}
-          min={0}
-          max={1}
-          value={qipt}
-          onChange={handleSliderChange5}
-        />
-      </div>
-      <div>
-        f50tr
-        <SliderInput
-          type="range"
-          min={0}
-          max={100}
-          value={f50tr}
-          onChange={handleSliderChange6}
-        />
-      </div>
-      <div>
-        qitr
-        <SliderInput
-          min={0}
-          step={0.01}
-          max={1}
-          value={qitr}
-          onChange={handleSliderChange7}
-        />
+        data={graphData}
+      />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <div>
+          <label>qideka</label>
+          <SliderInput
+            label="qideka"
+            min={0}
+            max={1}
+            step={0.01}
+            value={qideka}
+            onChange={handleSliderChange1}
+          />
+        </div>
+        <div>
+        <label>f50deol</label>
+          <SliderInput
+            label="f50deol"
+            min={0}
+            max={100}
+            value={f50deol}
+            onChange={handleSliderChange2}
+          />
+        </div>
+        <div>
+        <label>qideol</label>
+          <SliderInput
+            label="qideol"
+            min={0}
+            max={1}
+            step={0.01}
+            value={qideol}
+            onChange={handleSliderChange3}
+          />
+        </div>
+        <div>
+        <label>f50pt</label>
+          <SliderInput
+            label="f50pt"
+            min={0}
+            max={100}
+            value={f50pt}
+            onChange={handleSliderChange4}
+          />
+        </div>
+        <div>
+        <label>qipt</label>
+          <SliderInput
+            label="qipt"
+            min={0}
+            max={1}
+            step={0.01}
+            value={qipt}
+            onChange={handleSliderChange5}
+          />
+        </div>
+        <div>
+        <label>f50tr</label>
+          <SliderInput
+            label="f50tr"
+            min={0}
+            max={100}
+            value={f50tr}
+            onChange={handleSliderChange6}
+          />
+        </div>
+        <div>
+        <label>qitr</label>
+          <SliderInput
+            label="qitr"
+            min={0}
+            max={1}
+            step={0.01}
+            value={qitr}
+            onChange={handleSliderChange7}
+          />
+        </div>
       </div>
     </div>
   );
